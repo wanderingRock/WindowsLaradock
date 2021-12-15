@@ -18,7 +18,7 @@ https://www.docker.com/products/docker-desktop
 安裝完後重新啟動電腦     
 
 ### Step3. 取得Laradock
-找個資料夾git clone Laradock  
+找個地方放上資料夾git clone Laradock  
 ```
 git clone https://github.com/laradock/laradock.git laradock
 ```
@@ -58,6 +58,86 @@ http://localhost:8081/
 伺服器: mysql  
 使用者名稱: default   
 密碼: secret  
+
+### Step6. 設定vhost
+
+1.修改windows的host 加上網址名
+
+進入 C:\Windows\System32\drivers\etc 打開 hosts 加入
+```
+127.0.0.1  		project-1.test
+```
+之後再進入 laradock\apache2\sites 打開 default.apache.conf
+
+將原先的保留並且複製  
+修改複製的內容, 將以下內容修改為自己的專案目錄  
+```
+ ServerName project-1.test
+ DocumentRoot /var/www/project-1
+ <Directory "/var/www/project-1">
+```
+完整修改過後   
+```
+<VirtualHost *:80>
+  ServerName laradock.test
+  DocumentRoot /var/www
+  Options Indexes FollowSymLinks
+
+  <Directory "/var/www">
+    AllowOverride All
+    <IfVersion < 2.4>
+      Allow from all
+    </IfVersion>
+    <IfVersion >= 2.4>
+      Require all granted
+    </IfVersion>
+  </Directory>
+
+  ErrorLog /var/log/apache2/error.log
+  CustomLog /var/log/apache2/access.log combined
+</VirtualHost>
+
+<VirtualHost *:80>
+  ServerName project-1.test
+  DocumentRoot /var/www/project-1
+  Options Indexes FollowSymLinks
+
+  <Directory "/var/www/project-1">
+    AllowOverride All
+    <IfVersion < 2.4>
+      Allow from all
+    </IfVersion>
+    <IfVersion >= 2.4>
+      Require all granted
+    </IfVersion>
+  </Directory>
+
+  ErrorLog /var/log/apache2/error.log
+  CustomLog /var/log/apache2/access.log combined
+</VirtualHost>
+
+```
+改完需要先重啟 apache的 container   
+可從Docker Desktop介面重啟 或是用指令   
+```
+docker ps -a
+docker restart laradock_apache2 or docker restart 容器編號
+```
+完成後,進入網址看看是否成功
+http://project-1.test
+
+### Step6. 專案mysql連線
+
+修改專案的database設定檔  
+通常只改三個地方  
+```
+    'hostname' => 'mysql',
+    'username' => 'root',
+    'password' => 'root',
+```
+完成後,進入網址看看是否能成功連線   
+http://project-1.test
+
 
 
 
