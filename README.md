@@ -29,9 +29,8 @@ git clone https://github.com/laradock/laradock.git laradock
 cd laradock
 cp .env.example .env
 ```
-將DATA_PATH_HOST=~/.laradock/data修改為DATA_PATH_HOST=./data  
+~~將DATA_PATH_HOST=~/.laradock/data修改為DATA_PATH_HOST=./data~~
 (沒調整的話 mysql or mariadb 的 container 可能會無法啟動)
-
 
 其他調整暫時先略過
 
