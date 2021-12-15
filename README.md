@@ -137,6 +137,42 @@ http://project-1.test
 完成後,進入網址看看是否能成功連線   
 http://project-1.test
 
+### Step7. 簡化架站流程
 
+寫bat檔,輸入測試網站名即可馬上使用  
+
+```
+@SET /P host=Enter your project name:
+
+@echo its:%host%
+
+@cd C:\Windows\System32\drivers\etc
+
+@echo 127.0.0.1       %host%.test  >>  hosts
+
+@cd C:\Users\rock\Desktop\dockertest\laradock\apache2\sites
+
+@echo ^<VirtualHost *:80^>                              >>  default.apache.conf   
+@echo   ServerName %host%.test                          >>  default.apache.conf 
+@echo   DocumentRoot /var/www/%host%                    >>  default.apache.conf 
+@echo   Options Indexes FollowSymLinks                  >>  default.apache.conf 
+@echo    ^<Directory "/var/www/%host%"^>                >>  default.apache.conf 
+@echo       AllowOverride All                           >>  default.apache.conf 
+@echo      ^<IfVersion ^< 2.4 ^>                         >>  default.apache.conf 
+@echo           Allow from all                          >>  default.apache.conf 
+@echo      ^</IfVersion^>                               >>  default.apache.conf 
+@echo      ^<IfVersion ^>^= 2.4^>                        >>  default.apache.conf 
+@echo           Require all granted                     >>  default.apache.conf 
+@echo      ^</IfVersion^>                               >>  default.apache.conf 
+@echo    ^</Directory^>                                 >>  default.apache.conf 
+@echo   ErrorLog /var/log/apache2/error.log             >>  default.apache.conf 
+@echo   CustomLog /var/log/apache2/access.log combined  >>  default.apache.conf 
+@echo  ^</VirtualHost^>                                 >>  default.apache.conf 
+docker ps -a
+docker restart laradock_apache2_1
+```
+bat檔寫好後
+右鍵以系統管理員身分執行
+輸入你測試網站的名稱
 
 
