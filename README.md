@@ -143,33 +143,43 @@ http://project-1.test
 寫bat檔,輸入測試網站名即可馬上使用  
 
 ```
-@SET /P host=Enter your project name:
+@echo off 
+:starttype
+@SET /P project_name=Enter your project name : 
+@SET /P host_name=Enter your host name : 
 
-@echo its:%host%
+@echo project_name:%project_name%
+@echo host_name:%host_name%
 
+CHOICE /C YR /M "Confirm the project name and host name you entered, or type R/r to edit."
+if errorlevel 2 goto starttype
+if errorlevel 1 goto typein
+
+
+:typein
+@echo waiting ....
 @cd C:\Windows\System32\drivers\etc
 
-@echo 127.0.0.1       %host%.test  >>  hosts
+@echo 127.0.0.1       wei.%host_name%.com  >>  hosts
 
-@cd C:\Users\rock\Desktop\dockertest\laradock\apache2\sites
+@cd C:\docker\laradock\apache2\sites
 
 @echo ^<VirtualHost *:80^>                              >>  default.apache.conf   
-@echo   ServerName %host%.test                          >>  default.apache.conf 
-@echo   DocumentRoot /var/www/%host%                    >>  default.apache.conf 
+@echo   ServerName     wei.%host_name%.com              >>  default.apache.conf 
+@echo   DocumentRoot /var/www/%project_name%            >>  default.apache.conf 
 @echo   Options Indexes FollowSymLinks                  >>  default.apache.conf 
-@echo    ^<Directory "/var/www/%host%"^>                >>  default.apache.conf 
+@echo    ^<Directory "/var/www/%project_name%"^>        >>  default.apache.conf 
 @echo       AllowOverride All                           >>  default.apache.conf 
-@echo      ^<IfVersion ^< 2.4 ^>                         >>  default.apache.conf 
+@echo      ^<IfVersion ^< 2.4 ^>                        >>  default.apache.conf 
 @echo           Allow from all                          >>  default.apache.conf 
 @echo      ^</IfVersion^>                               >>  default.apache.conf 
-@echo      ^<IfVersion ^>^= 2.4^>                        >>  default.apache.conf 
+@echo      ^<IfVersion ^>^= 2.4^>                       >>  default.apache.conf 
 @echo           Require all granted                     >>  default.apache.conf 
 @echo      ^</IfVersion^>                               >>  default.apache.conf 
 @echo    ^</Directory^>                                 >>  default.apache.conf 
-@echo   ErrorLog /var/log/apache2/error.log             >>  default.apache.conf 
-@echo   CustomLog /var/log/apache2/access.log combined  >>  default.apache.conf 
+@echo   ErrorLog /var/log/apache2/error_%project_name%.log             >>  default.apache.conf 
+@echo   CustomLog /var/log/apache2/access_%project_name%.log combined  >>  default.apache.conf 
 @echo  ^</VirtualHost^>                                 >>  default.apache.conf 
-docker ps -a
 docker restart laradock_apache2_1
 ```
 bat檔寫好後
