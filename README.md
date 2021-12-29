@@ -186,4 +186,20 @@ bat檔寫好後
 右鍵以系統管理員身分執行
 輸入你測試網站的名稱
 
+修改記憶體佔用量
+---
+1按下Windows + R 鍵，輸入 %UserProfile% 並執行進入使用者資料夾
+
+2新建檔案 .wslconfig ，然後記事本編輯
+
+3 填入以下內容並儲存, memory為系統記憶體上限，這裡我限制最大2gb，可根據自身電腦配置設定
+
+```
+[wsl2]
+memory=2GB
+swap=0
+localhostForwarding=true
+```
+4 然後啟動cmd命令提示符，輸入 wsl --shutdown 來關閉當前的子系統
+
 
