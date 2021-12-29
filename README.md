@@ -202,4 +202,128 @@ localhostForwarding=true
 ```
 4 然後啟動cmd命令提示符，輸入 wsl --shutdown 來關閉當前的子系統
 
+php 加密安裝
+---
+mcrypt
+```
+apt-get update -y
+apt-get install -y libmcrypt-dev libreadline-dev
+pecl install mcrypt
+```
+laradock 修改mysql版本
+---
+參考網址:https://hoohoo.top/blog/laradock-mysql-set/
+
+首先先停止所有運作中的 container
+```
+docker-compose down
+```
+
+將 laradock/.env 裡面的 MYSQL_VERSION=latest 修改為 5.7
+```
+MYSQL_VERSION=5.7
+```
+刪除 MySQL Database
+//Delete mysql database
+```
+$ rm -rf ~/.laradock/data/mysql
+```
+重新建構 mysql image
+//rebuild mysql image
+```
+$ docker-compose build mysql
+//or try
+$ docker-compose build --no-cache mysql
+```
+
+重新啟動 workspace container
+```
+$ docker-compose up -d nginx mysql phpmyadmin
+```
+nginx bat檔
+```
+@echo off 
+:starttype
+
+@SET /P project_name=Enter your project name : 
+
+@SET /P host_name=Enter your host name : 
+
+@echo project_name:%project_name%
+@echo host_name:%host_name%
+
+CHOICE /C YR /M "Confirm the project name and host name you entered, or type R/r to edit."
+if errorlevel 2 goto starttype
+if errorlevel 1 goto typein
+
+:typein
+
+@echo.
+@echo  ===============================
+@echo  Select your project frame
+@echo  ===============================
+@echo.
+@echo  1. Codeigniter
+@echo.
+@echo  2. Laravel
+@echo.
+
+CHOICE /N /C:12 /M "PICK A NUMBER (1,2)"%1
+if errorlevel 2  goto Laravel
+if errorlevel 1  goto Codeigniter
+
+:Laravel
+set name=public
+:Codeigniter
+
+
+@echo waiting ....
+@cd C:\Windows\System32\drivers\etc
+
+@echo 127.0.0.1   %host_name%.test  >>  hosts
+
+@cd C:\Users\rock\Desktop\docker_sys\laradock\nginx\sites
+
+type nul > %host_name%.conf
+
+@echo server {																		>>  %host_name%.conf   
+
+@echo 		listen 80 ;																>>  %host_name%.conf   
+@echo 		listen [::]:80 ;														>>  %host_name%.conf   
+
+@echo 		server_name %host_name%.test;											>>  %host_name%.conf   
+@echo 		root /var/www/%project_name%/%name%;									>>  %host_name%.conf   
+@echo 		index index.php index.html index.htm;									>>  %host_name%.conf   
+
+@echo 		location / {															>>  %host_name%.conf   
+@echo   		try_files $uri $uri/ /index.php$is_args$args;						>>  %host_name%.conf   
+@echo 		}																		>>  %host_name%.conf   			
+
+@echo 		location ~ \.php$ {														>>  %host_name%.conf   
+@echo   		try_files $uri /index.php =404;										>>  %host_name%.conf   
+@echo   		fastcgi_pass php-upstream;											>>  %host_name%.conf   
+@echo   		fastcgi_index index.php;											>>  %host_name%.conf   
+@echo   		fastcgi_buffers 16 16k;												>>  %host_name%.conf   
+@echo   		fastcgi_buffer_size 32k;											>>  %host_name%.conf   
+@echo   		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;	>>  %host_name%.conf   
+@echo   		#fixes timeouts														>>  %host_name%.conf   
+@echo   		fastcgi_read_timeout 600;											>>  %host_name%.conf   
+@echo   		include fastcgi_params;												>>  %host_name%.conf   
+@echo 		}																		>>  %host_name%.conf   		
+
+@echo 		location ~ /\.ht {														>>  %host_name%.conf   
+@echo   		deny all;															>>  %host_name%.conf   
+@echo 		}																		>>  %host_name%.conf   
+
+@echo 		location /.well-known/acme-challenge/ {									>>  %host_name%.conf   
+@echo   		root /var/www/letsencrypt/;											>>  %host_name%.conf   
+@echo   		log_not_found off;													>>  %host_name%.conf   
+@echo   	}																		>>  %host_name%.conf   
+@echo  		error_log /var/log/nginx/%host_name%_error.log;							>>  %host_name%.conf   
+@echo 		access_log /var/log/nginx/%host_name%_access.log;						>>  %host_name%.conf   
+@echo 	}																			>>  %host_name%.conf   
+	
+docker restart laradock_nginx_1
+```
+
 
