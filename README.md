@@ -326,4 +326,11 @@ type nul > %host_name%.conf
 docker restart laradock_nginx_1
 ```
 
+docker 自動重啟
+
+docker container update --restart=always $(docker ps -a -q)
+
+
+
+
 
