@@ -43,6 +43,8 @@ docker-compose up -d 放入想使用的服務
  docker-compose up -d nginx mariadb workspace   
  docker-compose up -d apache2 phpmyadmin  
  docker-compose up -d nginx phpmyadmin workspace
+ winpty docker exec -it laradock_workspace_1 //bin//bash
+
 ```
 我先以第2項來建立,原因是比較符合我們目前的環境   
 完成後,進入ppma看看是否成功
