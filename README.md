@@ -232,7 +232,7 @@ MYSQL_VERSION=5.7
 $ rm -rf ~/.laradock/data/mysql
 ```
 重新建構 mysql image
-打开 laradock 根目录下的 .env 文件，查找 MYSQL_VERSION=，修改為要使用的版本
+
 //rebuild mysql image
 ```
 $ docker-compose build mysql
@@ -243,10 +243,10 @@ $ docker-compose build --no-cache mysql
 ```
 $ docker-compose up -d nginx mysql phpmyadmin
 ```
-
-重新建構 php版本 
+## laradock 修改php版本
 打开 laradock 根目录下的 .env 文件，查找 PHP_VERSION=，修改為要使用的版本
-//rebuild mysql image
+
+重新建構 php-fpm
 ```
 docker-compose build php-fpm
 docker-compose build workspace
@@ -256,7 +256,7 @@ docker-compose build workspace
 $ docker-compose up -d nginx mysql phpmyadmin
 ```
 
-nginx bat檔
+## 提供nginx bat檔,快速設定vhost
 ```
 @echo off 
 :starttype
