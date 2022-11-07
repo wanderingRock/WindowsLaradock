@@ -346,7 +346,147 @@ docker 自動重啟
 
 docker container update --restart=always $(docker ps -a -q)
 
+### 支援多版本 php
+
+參考文章 : https://msirius.medium.com/1-n-php-versions-and-projects-via-laradock-51938b337071
 
 
+首先修改 laradock 底下 docker-compose.yml檔案
 
+找到 PHP-FPM 複製並修改
+
+先複製 ### PHP-FPM ############################################## 其下整段
+
+再修改
+```
+### PHP-FPM-8.0 ##############################################
+    php-fpm-8.0:
+      build:
+        context: ./php-fpm
+        args:
+          - CHANGE_SOURCE=${CHANGE_SOURCE}
+          - BASE_IMAGE_TAG_PREFIX=${PHP_FPM_BASE_IMAGE_TAG_PREFIX}
+          - LARADOCK_PHP_VERSION=8.0
+          - LARADOCK_PHALCON_VERSION=${PHALCON_VERSION}
+          - INSTALL_BZ2=${PHP_FPM_INSTALL_BZ2}
+          - INSTALL_ENCHANT=${PHP_FPM_INSTALL_ENCHANT}
+          - INSTALL_GMP=${PHP_FPM_INSTALL_GMP}
+          - INSTALL_GNUPG=${PHP_FPM_INSTALL_GNUPG}
+          - INSTALL_XDEBUG=${PHP_FPM_INSTALL_XDEBUG}
+          - INSTALL_PCOV=${PHP_FPM_INSTALL_PCOV}
+          - INSTALL_PHPDBG=${PHP_FPM_INSTALL_PHPDBG}
+          - INSTALL_BLACKFIRE=${INSTALL_BLACKFIRE}
+          - INSTALL_SSH2=${PHP_FPM_INSTALL_SSH2}
+          - INSTALL_SOAP=${PHP_FPM_INSTALL_SOAP}
+          - INSTALL_XSL=${PHP_FPM_INSTALL_XSL}
+          - INSTALL_SMB=${PHP_FPM_INSTALL_SMB}
+          - INSTALL_IMAP=${PHP_FPM_INSTALL_IMAP}
+          - INSTALL_MONGO=${PHP_FPM_INSTALL_MONGO}
+          - INSTALL_AMQP=${PHP_FPM_INSTALL_AMQP}
+          - INSTALL_CASSANDRA=${PHP_FPM_INSTALL_CASSANDRA}
+          - INSTALL_GEARMAN=${PHP_FPM_INSTALL_GEARMAN}
+          - INSTALL_MSSQL=${PHP_FPM_INSTALL_MSSQL}
+          - INSTALL_BCMATH=${PHP_FPM_INSTALL_BCMATH}
+          - INSTALL_PHPREDIS=${PHP_FPM_INSTALL_PHPREDIS}
+          - INSTALL_MEMCACHED=${PHP_FPM_INSTALL_MEMCACHED}
+          - INSTALL_OPCACHE=${PHP_FPM_INSTALL_OPCACHE}
+          - INSTALL_EXIF=${PHP_FPM_INSTALL_EXIF}
+          - INSTALL_AEROSPIKE=${PHP_FPM_INSTALL_AEROSPIKE}
+          - INSTALL_OCI8=${PHP_FPM_INSTALL_OCI8}
+          - INSTALL_MYSQLI=${PHP_FPM_INSTALL_MYSQLI}
+          - INSTALL_PGSQL=${PHP_FPM_INSTALL_PGSQL}
+          - INSTALL_PG_CLIENT=${PHP_FPM_INSTALL_PG_CLIENT}
+          - INSTALL_POSTGIS=${PHP_FPM_INSTALL_POSTGIS}
+          - INSTALL_INTL=${PHP_FPM_INSTALL_INTL}
+          - INSTALL_GHOSTSCRIPT=${PHP_FPM_INSTALL_GHOSTSCRIPT}
+          - INSTALL_LDAP=${PHP_FPM_INSTALL_LDAP}
+          - INSTALL_PHALCON=${PHP_FPM_INSTALL_PHALCON}
+          - INSTALL_SWOOLE=${PHP_FPM_INSTALL_SWOOLE}
+          - INSTALL_TAINT=${PHP_FPM_INSTALL_TAINT}
+          - INSTALL_IMAGE_OPTIMIZERS=${PHP_FPM_INSTALL_IMAGE_OPTIMIZERS}
+          - INSTALL_IMAGEMAGICK=${PHP_FPM_INSTALL_IMAGEMAGICK}
+          - INSTALL_CALENDAR=${PHP_FPM_INSTALL_CALENDAR}
+          - INSTALL_FAKETIME=${PHP_FPM_INSTALL_FAKETIME}
+          - INSTALL_IONCUBE=${PHP_FPM_INSTALL_IONCUBE}
+          - INSTALL_APCU=${PHP_FPM_INSTALL_APCU}
+          - INSTALL_CACHETOOL=${PHP_FPM_INSTALL_CACHETOOL}
+          - INSTALL_YAML=${PHP_FPM_INSTALL_YAML}
+          - INSTALL_RDKAFKA=${PHP_FPM_INSTALL_RDKAFKA}
+          - INSTALL_GETTEXT=${PHP_FPM_INSTALL_GETTEXT}
+          - INSTALL_ADDITIONAL_LOCALES=${PHP_FPM_INSTALL_ADDITIONAL_LOCALES}
+          - INSTALL_MYSQL_CLIENT=${PHP_FPM_INSTALL_MYSQL_CLIENT}
+          - INSTALL_PING=${PHP_FPM_INSTALL_PING}
+          - INSTALL_SSHPASS=${PHP_FPM_INSTALL_SSHPASS}
+          - INSTALL_MAILPARSE=${PHP_FPM_INSTALL_MAILPARSE}
+          - INSTALL_PCNTL=${PHP_FPM_INSTALL_PCNTL}
+          - ADDITIONAL_LOCALES=${PHP_FPM_ADDITIONAL_LOCALES}
+          - INSTALL_FFMPEG=${PHP_FPM_FFMPEG}
+          - INSTALL_AUDIOWAVEFORM=${PHP_FPM_AUDIOWAVEFORM}
+          - INSTALL_WKHTMLTOPDF=${PHP_FPM_INSTALL_WKHTMLTOPDF}
+          - INSTALL_XHPROF=${PHP_FPM_INSTALL_XHPROF}
+          - INSTALL_XMLRPC=${PHP_FPM_INSTALL_XMLRPC}
+          - INSTALL_PHPDECIMAL=${PHP_FPM_INSTALL_PHPDECIMAL}
+          - INSTALL_ZOOKEEPER=${PHP_FPM_INSTALL_ZOOKEEPER}
+          - INSTALL_SSDB=${PHP_FPM_INSTALL_SSDB}
+          - INSTALL_TRADER=${PHP_FPM_INSTALL_TRADER}
+          - DOWNGRADE_OPENSSL_TLS_AND_SECLEVEL=${PHP_DOWNGRADE_OPENSSL_TLS_AND_SECLEVEL}
+          - PUID=${PHP_FPM_PUID}
+          - PGID=${PHP_FPM_PGID}
+          - IMAGEMAGICK_VERSION=${PHP_FPM_IMAGEMAGICK_VERSION}
+          - LOCALE=${PHP_FPM_DEFAULT_LOCALE}
+          - PHP_FPM_NEW_RELIC=${PHP_FPM_NEW_RELIC}
+          - PHP_FPM_NEW_RELIC_KEY=${PHP_FPM_NEW_RELIC_KEY}
+          - PHP_FPM_NEW_RELIC_APP_NAME=${PHP_FPM_NEW_RELIC_APP_NAME}
+          - INSTALL_DOCKER_CLIENT=${PHP_FPM_INSTALL_DOCKER_CLIENT}
+          - http_proxy
+          - https_proxy
+          - no_proxy
+      volumes:
+        - ./php-fpm/php8.0.ini:/usr/local/etc/php/php.ini
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+        - docker-in-docker:/certs/client
+      ports:
+        - "9004:9004"
+      expose:
+        - "9000"
+      extra_hosts:
+        - "dockerhost:${DOCKER_HOST_IP}"
+      environment:
+        - PHP_IDE_CONFIG=${PHP_IDE_CONFIG}
+        - DOCKER_HOST=tcp://docker-in-docker:2376
+        - DOCKER_TLS_VERIFY=1
+        - DOCKER_TLS_CERTDIR=/certs
+        - DOCKER_CERT_PATH=/certs/client
+        - FAKETIME=${PHP_FPM_FAKETIME}
+      depends_on:
+        - workspace
+      networks:
+        - backend
+
+```
+原本有含 links: 我們把它拿掉，因為build時會出錯
+
+之後修改 NGINX Server 的 depends_on (依賴項目)
+
+```
+      depends_on:
+        - php-fpm 	舊的	
+        - php-fpm-8.0 	新增
+```
+最後再執行build
+```
+docker-compose up -d --build workspace nginx
+```
+build成功後 重啟原先的容器
+```
+docker-compose up -d mysql phpmyadmin
+```
+整個部屬好後使用nginx切換，修改./laradock/nginx/sites/ 的專案conf檔
+找到 fastcgi_pass
+```
+初始php版本修改為
+fastcgi_pass php-upstream;
+變更不同版本的修改為
+fastcgi_pass php-fpm-8.0:9000;	
+```
 
