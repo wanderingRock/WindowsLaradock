@@ -490,3 +490,13 @@ fastcgi_pass php-upstream;
 fastcgi_pass php-fpm-8.0:9000;	
 ```
 
+修改完後要處理不同php版本的composer問題
+
+要先進容器,要使用docker-compose 的方式進去灌不同php版本的composer
+要看目前使用容器的名稱
+```
+ docker-compose exec php-fpm bash
+ docker-compose exec php-fpm-8.0 bash 
+```
+進去後個別安裝composer
+網址:https://getcomposer.org/download/
